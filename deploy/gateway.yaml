@@ -1,0 +1,46 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: kickstarter-frontend-gw
+  namespace: kickstarter
+spec:
+  selector:
+    istio: ingress
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "kickstarter.pintobean.xyz"
+    tls:
+      httpsRedirect: true
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: kickstarter-frontend-tls
+    hosts:
+    - "kickstarter.pintobean.xyz"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: kickstarter-frontend-vs
+  namespace: kickstarter
+spec:
+  hosts:
+  - kickstarter.pintobean.xyz
+  gateways:
+  - kickstarter-frontend-gw
+  http:
+  - name: http-kickstarter-frontend
+    route:
+    - destination:
+        host: kickstarter-frontend 
+        port:
+          number: 3000
+

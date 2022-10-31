@@ -1,0 +1,8 @@
+.DS_Store
+pid.file
+nohup.out
+
+### VS Code ###
+.vscode/
+
+node_modules/

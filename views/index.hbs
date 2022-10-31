@@ -1,0 +1,139 @@
+<script>
+    $(document).ready(function() {
+        $("#tlsInformation").hide();
+        $("#gatewayVirtualServiceForm").hide();
+
+        $("#protocol").on("change", function(event) {
+            if ($("#protocol").val() == "HTTPS" || $("#protocol").val() == "TLS") {
+                $("#tlsInformation").show();
+                $("#tlsMode").prop("required", true);
+                $("#credentialName").prop("required", true);
+            } else {
+                $("#tlsInformation").hide();
+                $("#tlsMode").removeAttr("required");
+                $("#credentialName").removeAttr("required");
+            }
+        });
+
+        $("#includeGatewayVirtualService").on("click", function(event) {
+            if ($("#includeGatewayVirtualService").prop("checked")) {
+                $("#gatewayVirtualServiceForm").show();
+                $("#gatewayHost").prop("required", true)
+                $("#gatewayPort").prop("required", true)
+                $("#gatewayPortName").prop("required", true)
+            } else {
+                $("#gatewayVirtualServiceForm").hide();
+                $("#gatewayHost").removeAttr("required");
+                $("#gatewayPort").removeAttr("required");
+                $("#gatewayPortName").removeAttr("required");
+            }
+        });
+
+    });
+</script>
+
+<form action="/" method="post" enctype="application/x-www-form-urlencoded"> 
+    <div class="container" id="app">
+        <div class="card mb-3">
+            <div class="card-header">
+                <img src="/images/deployment.svg" height="24"/>&nbsp;&nbsp;Deployment &amp Service
+            </div>
+            <div class="card-body">
+                <div class="mb-3 col-md-6">
+                    <label for="deploymentName" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="deploymentName" name="deploymentName" required/>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="deploymentNamespace" class="form-label">Namespace</label>
+                    <input type="text" class="form-control" id="deploymentNamespace" name="deploymentNamespace" value="default"/>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="containerImage" class="form-label">Container Image</label>
+                    <input type="text" class="form-control" id="containerImage" name="containerImage" required/>
+                </div>
+                <div class="mb-3 col-md-2">
+                    <label for="replicas" class="form-label">Replicas</label>
+                    <input type="number" class="form-control" id="replicas" name="replicas" value="1" required/>
+                </div>
+                <div class="mb-3 col-md-2">
+                    <label for="containerPort" class="form-label">Container Port</label>
+                    <input type="number" class="form-control" id="containerPort" name="containerPort" required/>
+                </div>
+                <div class="mb-3 col-md-2">
+                    <label for="servicePort" class="form-label">Service Port</label>
+                    <input type="number" class="form-control" id="servicePort" name="servicePort"/>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <label for="serviceAccountName" class="form-label">Service Account Name</label>
+                    <input type="text" class="form-control" id="serviceAccountName" name="serviceAccountName"/>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-3">
+            <div class="card-header">
+                <img src="/images/istio.svg" height="24"/>&nbsp;&nbsp;Gateway &amp; Virtual Service
+            </div>
+            <div class="card-body">
+                <div class="form-check form-switch">
+                    <input type="checkbox" role="switch" id="includeGatewayVirtualService" name="includeGatewayVirtualService" class="form-check-input"/>
+                    <label for="includeGatewayVirtualService" class="form-check-label">Create a Gateway &amp; Virtual Service</label>
+                </div>
+                <div id="gatewayVirtualServiceForm">
+                    <div class="accordion-body">
+                        <div class="mb-3 col-md-6">
+                            <label for="gatewayHost" class="form-label">Host</label>
+                            <input type="text" class="form-control" id="gatewayHost" name="gatewayHost"/>
+                        </div>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="mb-3 col-md-2">
+                            <label for="gatewayPort" class="form-label">Gateway Port</label>
+                            <input type="number" class="form-control" id="gatewayPort" name="gatewayPort"/>
+                        </div>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="mb-3 col-md-6">
+                            <label for="gatewayPortName" class="form-label">Gateway Port Name</label>
+                            <input type="text" class="form-control" id="gatewayPortName" name="gatewayPortName"/>
+                        </div>
+                    </div>
+                    <div class="accordion-body">
+                        <div class="mb-3 col-md-4">
+                            <label for="protocol" class="form-label">Protocol</label>
+                            <select class="form-select" id="protocol" name="protocol">
+                                <option value="HTTP">HTTP</option>
+                                <option value="HTTPS">HTTPS</option>
+                                <option value="HTTP/2">HTTP/2</option>
+                                <option value="GRPC">gRPC</option>
+                                <option value="TCP">TCP</option>
+                                <option value="TLS">TLS</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="tlsInformation">
+                        <div class="accordion-body">
+                            <div class="mb-3 col-md-4">
+                                <label for="tlsMode" class="form-label">TLS Mode</label>
+                                <select class="form-select" id="tlsMode" name="tlsMode">
+                                    <option value="SIMPLE">Simple</option>
+                                    <option value="PASSTHROUGH">Passthrough</option>
+                                    <option value="AUTO_PASSTHROUGH">Auto Passthrough</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="accordion-body">
+                            <div class="mb-3 col-md-6">
+                                <label for="credentialName" class="form-label">Credential Name</label>
+                                <input type="text" class="form-control" id="credentialName" name="credentialName"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 my-4">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+

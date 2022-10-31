@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kickstarter-frontend
+  namespace: kickstarter
+  labels:
+    app: kickstarter-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kickstarter-frontend
+  template:
+    metadata:
+      labels:
+        app: kickstarter-frontend
+    spec:
+      containers:
+      - name: kickstarter
+        image: harbor.pintobean.xyz/kickstarter/kickstarter-frontend:0.1.0
+        ports:
+        - containerPort: 3000
+        imagePullPolicy: Always
+        env:
+        - name: KICKSTARTER_API_URI
+          value: http://kickstarter:8080
